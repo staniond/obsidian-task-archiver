@@ -1,6 +1,6 @@
 import { TreeBuilder } from "./TreeBuilder";
 
-import { LIST_MARKER_PATTERN } from "../../Patterns";
+import { CODE_FENCE_PATTERN, LIST_MARKER_PATTERN } from "../../Patterns";
 import { IndentationSettings } from "../../Settings";
 import { Block } from "../../model/Block";
 import { ListBlock } from "../../model/ListBlock";
@@ -31,7 +31,28 @@ export class BlockParser {
     constructor(private readonly settings: IndentationSettings) {}
 
     parse(lines: string[]): Block {
-        const flatBlocks = lines.map((line) => this.parseFlatBlock(line));
+        let inCodeFence = false;
+        const flatBlocks = lines.map((line) => {
+            const fenceMatch = line.match(CODE_FENCE_PATTERN);
+            if (fenceMatch && !inCodeFence) {
+                inCodeFence = true;
+                return this.parseFlatBlock(line);
+            }
+            if (fenceMatch && inCodeFence) {
+                const afterMarker = line.substring(fenceMatch[0].length).trim();
+                if (afterMarker === "") {
+                    inCodeFence = false;
+                    return this.parseFlatBlock(line);
+                }
+            }
+            if (inCodeFence) {
+                return {
+                    level: this.getIndentationLevel(line),
+                    markdownNode: new TextBlock(line),
+                };
+            }
+            return this.parseFlatBlock(line);
+        });
 
         const rootBlock = new RootBlock();
         const rootFlatBlock = {
