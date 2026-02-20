@@ -256,6 +256,43 @@ describe("Stringification", () => {
         expect(stringified).toEqual(lines);
     });
 
+    test("Round-tripping does not mess up code blocks with list-like content", () => {
+        const lines = [
+            "```base",
+            "filters:",
+            "  and:",
+            "    - file.inFolder(this.file.folder)",
+            "    - file.path != this.file.path",
+            "views:",
+            "- type: list",
+            "  name: Table",
+            "```",
+        ];
+
+        const settings = { useTab: false, tabSize: 4 };
+        const parsed = new SectionParser(new BlockParser(settings)).parse(lines);
+        const stringified = parsed.stringify(buildIndentation(settings));
+        expect(stringified).toEqual(lines);
+    });
+
+    test("Round-tripping does not mess up code blocks with heading-like content", () => {
+        const lines = ["```markdown", "# Heading inside code block", "## Another heading", "```"];
+
+        const settings = { useTab: false, tabSize: 4 };
+        const parsed = new SectionParser(new BlockParser(settings)).parse(lines);
+        const stringified = parsed.stringify(buildIndentation(settings));
+        expect(stringified).toEqual(lines);
+    });
+
+    test("Round-tripping does not mess up tilde code blocks", () => {
+        const lines = ["~~~", "- list-like content", "# heading-like content", "~~~"];
+
+        const settings = { useTab: false, tabSize: 4 };
+        const parsed = new SectionParser(new BlockParser(settings)).parse(lines);
+        const stringified = parsed.stringify(buildIndentation(settings));
+        expect(stringified).toEqual(lines);
+    });
+
     test("Round-tripping does not mess up front matter", () => {
         const lines = ["---", "hello:", "  - world", "  - second", "---"];
 

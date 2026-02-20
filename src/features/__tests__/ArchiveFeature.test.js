@@ -163,6 +163,53 @@ describe("Moving top-level tasks to the archive", () => {
         );
     });
 
+    test("Does not modify code block content with list-like syntax", async () => {
+        await archiveTasksAndCheckActiveFile(
+            [
+                "# Index",
+                "",
+                "```base",
+                "filters:",
+                "  and:",
+                "    - file.inFolder(this.file.folder)",
+                "    - file.path != this.file.path",
+                "views:",
+                "- type: list",
+                "  name: Table",
+                "```",
+                "",
+                "# TODO",
+                "",
+                "- [ ] task A",
+                "- [x] task B",
+                "- [ ] task C",
+                "# Archived",
+            ],
+            [
+                "# Index",
+                "",
+                "```base",
+                "filters:",
+                "  and:",
+                "    - file.inFolder(this.file.folder)",
+                "    - file.path != this.file.path",
+                "views:",
+                "- type: list",
+                "  name: Table",
+                "```",
+                "",
+                "# TODO",
+                "",
+                "- [ ] task A",
+                "- [ ] task C",
+                "# Archived",
+                "",
+                "- [x] task B",
+                "",
+            ]
+        );
+    });
+
     describe("Additional task pattern from configuration", () => {
         test("Reads the additional task pattern from the config", async () => {
             await archiveTasksAndCheckActiveFile(

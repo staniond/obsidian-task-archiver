@@ -3,7 +3,7 @@ import { last } from "lodash";
 import { BlockParser } from "./BlockParser";
 import { TreeBuilder } from "./TreeBuilder";
 
-import { HEADING_PATTERN } from "../../Patterns";
+import { CODE_FENCE_PATTERN, HEADING_PATTERN } from "../../Patterns";
 import { Block } from "../../model/Block";
 import { Section } from "../../model/Section";
 import { splitFrontMatter } from "../../util/SplitFrontMatter";
@@ -16,9 +16,20 @@ interface RawSection {
 
 function buildRawSectionsFromLines(lines: string[]) {
     const rootSection: RawSection = { text: "", tokenLevel: 0, lines: [] };
+    let inCodeFence = false;
     return lines.reduce(
         (sections, line) => {
-            const match = line.match(HEADING_PATTERN);
+            const fenceMatch = line.match(CODE_FENCE_PATTERN);
+            if (fenceMatch && !inCodeFence) {
+                inCodeFence = true;
+            } else if (fenceMatch && inCodeFence) {
+                const afterMarker = line.substring(fenceMatch[0].length).trim();
+                if (afterMarker === "") {
+                    inCodeFence = false;
+                }
+            }
+
+            const match = !inCodeFence && line.match(HEADING_PATTERN);
             if (match) {
                 const [, headingToken, text] = match;
                 sections.push({
