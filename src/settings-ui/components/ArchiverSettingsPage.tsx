@@ -70,13 +70,15 @@ export function ArchiverSettingsPage(props: ArchiverSettingsPageProps) {
           <>
             Always archives <code>[x]</code>. Add extra status characters with no
             separators, like <code>-!</code> for <code>[-]</code> and <code>[!]</code>.
+            Use <code>*</code> to archive all task statuses.
           </>
         }
         value={settings.archiveAdditionalTaskStatuses}
         placeholder="-!>?"
-        onInput={({ currentTarget: { value } }) =>
-          setSettings({ archiveAdditionalTaskStatuses: [...new Set(value)].join("") })
-        }
+        onInput={({ currentTarget: { value } }) => {
+          // keep unique status characters while preserving user-entered order
+          setSettings({ archiveAdditionalTaskStatuses: [...new Set(value)].join("") });
+        }}
       />
 
       <ToggleSetting

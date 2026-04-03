@@ -2,11 +2,11 @@ import { DEFAULT_DATE_FORMAT, DEFAULT_WEEK_FORMAT, placeholders } from "../Const
 import { Settings } from "../Settings";
 
 export function replaceLegacySettings(settings: Settings) {
-    const updated = { ...settings };
-    const withLegacyCheckedTaskTypes =
-        updated as unknown as Settings & {
-            archiveAllCheckedTaskTypes?: boolean;
-        };
+    const updated = {
+        ...settings,
+    } as Settings & {
+        archiveAllCheckedTaskTypes?: boolean;
+    };
 
     if (updated.archiveHeading) {
         updated.headings = [{ text: updated.archiveHeading }];
@@ -39,11 +39,11 @@ export function replaceLegacySettings(settings: Settings) {
         delete updated.dailyNoteFormat;
     }
 
-    if (withLegacyCheckedTaskTypes.archiveAllCheckedTaskTypes === true) {
+    if (updated.archiveAllCheckedTaskTypes === true) {
         updated.archiveAdditionalTaskStatuses = "*";
     }
 
-    delete withLegacyCheckedTaskTypes.archiveAllCheckedTaskTypes;
+    delete updated.archiveAllCheckedTaskTypes;
 
     return updated;
 }
