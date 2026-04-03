@@ -21,5 +21,8 @@ describe("Settings migration", () => {
         } as unknown as typeof DEFAULT_SETTINGS);
 
         expect(migrated.archiveAdditionalTaskStatuses).toBe("");
+        expect(
+            "archiveAllCheckedTaskTypes" in (migrated as unknown as object)
+        ).toBe(false);
     });
 });

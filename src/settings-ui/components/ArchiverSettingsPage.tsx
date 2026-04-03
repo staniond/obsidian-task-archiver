@@ -76,6 +76,10 @@ export function ArchiverSettingsPage(props: ArchiverSettingsPageProps) {
         value={settings.archiveAdditionalTaskStatuses}
         placeholder="-!>?"
         onInput={({ currentTarget: { value } }) => {
+          if (value.includes("*")) {
+            setSettings({ archiveAdditionalTaskStatuses: "*" });
+            return;
+          }
           // keep unique status characters while preserving user-entered order
           setSettings({ archiveAdditionalTaskStatuses: [...new Set(value)].join("") });
         }}
