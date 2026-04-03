@@ -27,6 +27,10 @@ async function withNotice(cb: () => Promise<string>) {
 
 function replaceLegacySettings(settings: Settings) {
     const updated = { ...settings };
+    const withLegacyCheckedTaskTypes =
+        updated as unknown as Settings & {
+            archiveAllCheckedTaskTypes?: boolean;
+        };
 
     if (updated.archiveHeading) {
         updated.headings = [{ text: updated.archiveHeading }];
@@ -58,6 +62,12 @@ function replaceLegacySettings(settings: Settings) {
         delete updated.useDays;
         delete updated.dailyNoteFormat;
     }
+
+    if (withLegacyCheckedTaskTypes.archiveAllCheckedTaskTypes === true) {
+        updated.archiveAdditionalTaskStatuses = "^";
+    }
+
+    delete withLegacyCheckedTaskTypes.archiveAllCheckedTaskTypes;
 
     return updated;
 }

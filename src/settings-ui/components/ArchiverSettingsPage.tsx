@@ -64,14 +64,18 @@ export function ArchiverSettingsPage(props: ArchiverSettingsPageProps) {
         value={settings.addNewlinesAroundHeadings}
       />
 
-      <ToggleSetting
-        name="Archive all checked tasks"
-        description="Archive tasks with symbols other than 'x' (like '[>]', '[-]', etc.)"
-        value={settings.archiveAllCheckedTaskTypes}
-        onClick={() =>
-          setSettings({
-            archiveAllCheckedTaskTypes: !settings.archiveAllCheckedTaskTypes,
-          })
+      <TextSetting
+        name="Archive additional task statuses"
+        description={
+          <>
+            Always archives <code>[x]</code>. Add extra status characters with no
+            separators, like <code>-!</code> for <code>[-]</code> and <code>[!]</code>.
+          </>
+        }
+        value={settings.archiveAdditionalTaskStatuses}
+        placeholder="-!>?"
+        onInput={({ currentTarget: { value } }) =>
+          setSettings({ archiveAdditionalTaskStatuses: [...new Set(value)].join("") })
         }
       />
 

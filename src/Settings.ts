@@ -86,7 +86,7 @@ export interface Settings {
     obsidianTasksCompletedDateFormat: string;
     archiveUnderHeading: boolean;
     defaultArchiveFileName: string;
-    archiveAllCheckedTaskTypes: boolean;
+    archiveAdditionalTaskStatuses: string;
     sortAlphabetically: boolean;
     indentationSettings: IndentationSettings;
     textReplacement: TextReplacementSettings;
@@ -106,7 +106,7 @@ export const DEFAULT_SETTINGS: Settings = {
         metadata: `🔒 [[${placeholders.DATE}]] 🕸️ ${placeholders.HEADING_CHAIN}`,
     },
     additionalTaskPattern: "",
-    archiveAllCheckedTaskTypes: false,
+    archiveAdditionalTaskStatuses: "",
     archiveHeadingDepth: 1,
     archiveToSeparateFile: false,
     separateFileType: ArchiveFileType.CUSTOM,

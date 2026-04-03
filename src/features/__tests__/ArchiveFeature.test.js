@@ -267,22 +267,35 @@ describe("Moving top-level tasks to the archive", () => {
         });
     });
 
-    describe("Archive all checkmark types", () => {
-        test("Ignores checked tasks by default", async () => {
+    describe("Archive additional task statuses", () => {
+        test("Ignores non-x checked tasks by default", async () => {
             await archiveTasksAndCheckActiveFile(
                 ["- [-] foo", "# Archived"],
                 ["- [-] foo", "# Archived"]
             );
         });
 
-        test("Basic case", async () => {
+        test("Archives configured checked statuses", async () => {
             await archiveTasksAndCheckActiveFile(
                 ["- [-] foo", "# Archived"],
                 ["# Archived", "", "- [-] foo", ""],
                 {
                     settings: {
                         ...DEFAULT_SETTINGS_FOR_TESTS,
-                        archiveAllCheckedTaskTypes: true,
+                        archiveAdditionalTaskStatuses: "-",
+                    },
+                }
+            );
+        });
+
+        test("Archives only configured statuses (and always archives [x])", async () => {
+            await archiveTasksAndCheckActiveFile(
+                ["- [-] archived", "- [!] archived too", "- [>] keep", "- [x] done", "# Archived"],
+                ["- [>] keep", "# Archived", "", "- [-] archived", "- [!] archived too", "- [x] done", ""],
+                {
+                    settings: {
+                        ...DEFAULT_SETTINGS_FOR_TESTS,
+                        archiveAdditionalTaskStatuses: "-!",
                     },
                 }
             );
