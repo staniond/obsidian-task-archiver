@@ -76,7 +76,8 @@ export function ArchiverSettingsPage(props: ArchiverSettingsPageProps) {
         value={settings.archiveAdditionalTaskStatuses}
         placeholder="-!>?"
         onInput={({ currentTarget: { value } }) => {
-          if (value.includes("*")) {
+          const wildcardOnly = value.includes("*");
+          if (wildcardOnly) {
             setSettings({ archiveAdditionalTaskStatuses: "*" });
             return;
           }

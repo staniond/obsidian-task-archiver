@@ -43,6 +43,10 @@ export function replaceLegacySettings(settings: Settings) {
         updated.archiveAdditionalTaskStatuses = "*";
     }
 
+    if (updated.archiveAllCheckedTaskTypes === false) {
+        updated.archiveAdditionalTaskStatuses = "";
+    }
+
     delete updated.archiveAllCheckedTaskTypes;
 
     return updated;
