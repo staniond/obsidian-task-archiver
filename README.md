@@ -227,6 +227,10 @@ This might be useful if you want to see what you accomplished in a day:
 
 This way you can archive only those tasks that match a pattern and leave the rest of them alone. Say, you only want to archive tasks with a global filter used by the `obsidian-tasks` plugin (like the tag `#task`).
 
+### Additional task statuses to archive
+
+The plugin always archives `[x]` tasks. You can also configure extra statuses to archive by entering status characters without separators, for example `-!` to archive `[-]` and `[!]`.
+
 ### Heading & list hierarchies
 
 You can create arbitrary hierarchies with placeholders both with headings and with list items. New archived tasks are going to be merged into existing trees.

@@ -1,7 +1,6 @@
 import { MarkdownView, Notice, Plugin } from "obsidian";
 
 import { ActiveFile, DiskFile, EditorFile } from "./ActiveFile";
-import { DEFAULT_DATE_FORMAT, DEFAULT_WEEK_FORMAT, placeholders } from "./Constants";
 import { DEFAULT_SETTINGS, Settings } from "./Settings";
 import { ArchiveFeature } from "./features/ArchiveFeature";
 import { TaskListSortFeature } from "./features/TaskListSortFeature";
@@ -13,6 +12,7 @@ import { TextReplacementService } from "./services/TextReplacementService";
 import { BlockParser } from "./services/parser/BlockParser";
 import { SectionParser } from "./services/parser/SectionParser";
 import { ArchiverSettingTab } from "./settings-ui/ArchiverSettingTab";
+import { replaceLegacySettings } from "./util/SettingsMigration";
 
 async function withNotice(cb: () => Promise<string>) {
     try {
@@ -23,43 +23,6 @@ async function withNotice(cb: () => Promise<string>) {
         // eslint-disable-next-line no-new
         new Notice(e);
     }
-}
-
-function replaceLegacySettings(settings: Settings) {
-    const updated = { ...settings };
-
-    if (updated.archiveHeading) {
-        updated.headings = [{ text: updated.archiveHeading }];
-        delete updated.archiveHeading;
-    }
-
-    if (updated.useWeeks) {
-        updated.archiveUnderListItems = true;
-        updated.listItems = [
-            {
-                text: `[[${placeholders.DATE}]]`,
-                dateFormat: updated.weeklyNoteFormat || DEFAULT_WEEK_FORMAT,
-            },
-        ];
-
-        delete updated.useWeeks;
-        delete updated.weeklyNoteFormat;
-    }
-
-    if (updated.useDays) {
-        updated.archiveUnderListItems = true;
-        updated.listItems = [
-            {
-                text: `[[${placeholders.DATE}]]`,
-                dateFormat: updated.dailyNoteFormat || DEFAULT_DATE_FORMAT,
-            },
-        ];
-
-        delete updated.useDays;
-        delete updated.dailyNoteFormat;
-    }
-
-    return updated;
 }
 
 // eslint-disable-next-line import/no-default-export

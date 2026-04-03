@@ -63,7 +63,12 @@ export class TaskTestingService {
             return true;
         }
 
-        return this.settings.archiveAllCheckedTaskTypes;
+        if (this.settings.archiveAdditionalTaskStatuses.includes("*")) {
+            return true;
+        }
+
+        const taskStatus = this.getTaskStatus(task.text);
+        return this.settings.archiveAdditionalTaskStatuses.includes(taskStatus);
     }
 
     private isTaskHandledByRule(text: string) {
